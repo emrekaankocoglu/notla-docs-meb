@@ -18,7 +18,7 @@
  *   VIEWPORT_H   default 1191
  *   DPR          default 2
  *   OUT_DIR      default public/pdfs
- *   PNG_DIR      default public/screenshots/pdf (set to "" to skip PNGs)
+ *   PNG_DIR      set to public/screenshots/pdf to save intermediate PNGs
  *   COMBINED     default notla-docs.pdf (set to "" to skip combined PDF)
  */
 
@@ -40,9 +40,9 @@ const VIEWPORT = {
 const DPR = Number(process.env.DPR ?? 2)
 const OUT_DIR = path.resolve(ROOT, process.env.OUT_DIR ?? 'public/pdfs')
 const PNG_DIR =
-  process.env.PNG_DIR === ''
-    ? null
-    : path.resolve(ROOT, process.env.PNG_DIR ?? 'public/screenshots/pdf')
+  process.env.PNG_DIR && process.env.PNG_DIR !== ''
+    ? path.resolve(ROOT, process.env.PNG_DIR)
+    : null
 const COMBINED_NAME =
   process.env.COMBINED === '' ? null : (process.env.COMBINED ?? 'notla-docs.pdf')
 
@@ -73,31 +73,88 @@ async function ensureDir(dir) {
 async function waitForPagination(page) {
   await page.waitForFunction(
     () => {
-      // @ts-ignore
       return (
         document.querySelectorAll('[data-screen-index]').length > 0 &&
         document.documentElement.classList.contains('pdf-mode')
       )
     },
-    { timeout: 15_000 },
+    { timeout: 60_000 },
   )
 
-  // The paginator re-runs on font load and image load events. Wait for the
-  // count to be stable across two consecutive frames before capturing.
+  // The paginator can re-run after fonts or high-res screenshots affect
+  // layout. Wait for the section signature, not just the count, to settle.
   await page.waitForFunction(
     () => {
-      // @ts-ignore
-      const n = document.querySelectorAll('[data-screen-index]').length
-      // @ts-ignore
-      window.__lastN ??= -1
-      // @ts-ignore
-      const stable = window.__lastN === n
-      // @ts-ignore
-      window.__lastN = n
-      return stable && n > 0
+      const sections = Array.from(
+        document.querySelectorAll('[data-screen-index]'),
+      )
+      const signature = sections
+        .map((section) => {
+          return [
+            section.getAttribute('data-screen-index'),
+            section.scrollHeight,
+            section.getBoundingClientRect().height,
+          ].join(':')
+        })
+        .join('|')
+
+      window.__pdfStable ??= { signature: '', hits: 0 }
+      if (window.__pdfStable.signature === signature) {
+        window.__pdfStable.hits += 1
+      } else {
+        window.__pdfStable = { signature, hits: 1 }
+      }
+
+      return sections.length > 0 && window.__pdfStable.hits >= 4
     },
-    { timeout: 10_000, polling: 250 },
+    { timeout: 60_000, polling: 250 },
   )
+}
+
+async function waitForFonts(page) {
+  await page.evaluate(() =>
+    document.fonts?.ready ? document.fonts.ready : Promise.resolve(),
+  )
+}
+
+async function scrollToScreen(page, index) {
+  await page.evaluate((screenIndex) => {
+    const section = document.querySelector(
+      `[data-screen-index="${screenIndex}"]`,
+    )
+    if (!section) {
+      throw new Error(`Missing screen ${screenIndex}`)
+    }
+    section.scrollIntoView({ block: 'start', inline: 'nearest' })
+  }, index)
+
+  // Let CSS scroll-snap settle after direct DOM scrolling.
+  await page.waitForTimeout(300)
+}
+
+async function waitForScreenImages(page, index) {
+  await page.evaluate(async (screenIndex) => {
+    const section = document.querySelector(
+      `[data-screen-index="${screenIndex}"]`,
+    )
+    if (!section) return
+
+    const images = Array.from(section.querySelectorAll('img'))
+    await Promise.all(
+      images.map(async (img) => {
+        img.loading = 'eager'
+        if (!img.complete || img.naturalWidth === 0) {
+          await new Promise((resolve) => {
+            img.addEventListener('load', resolve, { once: true })
+            img.addEventListener('error', resolve, { once: true })
+          })
+        }
+        if (typeof img.decode === 'function') {
+          await img.decode().catch(() => {})
+        }
+      }),
+    )
+  }, index)
 }
 
 async function capturePage({ context, href, slug }) {
@@ -106,7 +163,7 @@ async function capturePage({ context, href, slug }) {
   url.searchParams.set('pdf', '1')
 
   const res = await page.goto(url.toString(), {
-    waitUntil: 'networkidle',
+    waitUntil: 'domcontentloaded',
     timeout: 30_000,
   })
   const status = res?.status() ?? 0
@@ -116,14 +173,27 @@ async function capturePage({ context, href, slug }) {
     return { ok: false, reason: `http_${status}` }
   }
 
-  await page.evaluate(() =>
-    document.fonts?.ready ? document.fonts.ready : Promise.resolve(),
-  )
+  await waitForFonts(page)
 
-  try {
-    await waitForPagination(page)
-  } catch (err) {
-    console.warn(`  skip (no PdfPaginator output): ${url} — ${err.message}`)
+  let paginationError = null
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try {
+      await waitForPagination(page)
+      paginationError = null
+      break
+    } catch (err) {
+      paginationError = err
+      if (attempt === 2) break
+      console.warn(`  retrying pagination wait: ${err.message}`)
+      await page.reload({ waitUntil: 'domcontentloaded', timeout: 30_000 })
+      await waitForFonts(page)
+    }
+  }
+
+  if (paginationError) {
+    console.warn(
+      `  skip (no PdfPaginator output): ${url} — ${paginationError.message}`,
+    )
     await page.close()
     return { ok: false, reason: 'no_paginator' }
   }
@@ -136,10 +206,8 @@ async function capturePage({ context, href, slug }) {
   if (pngOutDir) await ensureDir(pngOutDir)
 
   for (let i = 0; i < total; i++) {
-    const section = page.locator(`[data-screen-index="${i}"]`)
-    await section.scrollIntoViewIfNeeded()
-    // Let scroll-snap settle and any in-flight image decoding finish.
-    await page.waitForTimeout(150)
+    await scrollToScreen(page, i)
+    await waitForScreenImages(page, i)
 
     const png = await page.screenshot({
       clip: { x: 0, y: 0, width: VIEWPORT.width, height: VIEWPORT.height },
