@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
 
+import { usePdfMode } from '@/components/PdfModeContext'
 import { navigation } from '@/lib/navigation'
 
 function ArrowIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
@@ -52,10 +53,15 @@ function PageLink({
 
 export function PrevNextLinks() {
   let pathname = usePathname()
+  let isPdfMode = usePdfMode()
   let allLinks = navigation.flatMap((section) => section.links)
   let linkIndex = allLinks.findIndex((link) => link.href === pathname)
   let previousPage = linkIndex > -1 ? allLinks[linkIndex - 1] : null
   let nextPage = linkIndex > -1 ? allLinks[linkIndex + 1] : null
+
+  if (isPdfMode) {
+    return null
+  }
 
   if (!nextPage && !previousPage) {
     return null

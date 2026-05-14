@@ -1,9 +1,6 @@
 import { type Node } from '@markdoc/markdoc'
 
-import { DocsHeader } from '@/components/DocsHeader'
-import { PrevNextLinks } from '@/components/PrevNextLinks'
-import { Prose } from '@/components/Prose'
-import { TableOfContents } from '@/components/TableOfContents'
+import { DocsLayoutClient } from '@/components/DocsLayoutClient'
 import { collectSections } from '@/lib/sections'
 
 export function DocsLayout({
@@ -18,15 +15,8 @@ export function DocsLayout({
   let tableOfContents = collectSections(nodes)
 
   return (
-    <>
-      <div className="max-w-2xl min-w-0 flex-auto px-4 py-8 lg:max-w-none lg:pr-0 lg:pl-4">
-        <article>
-          <DocsHeader title={title} />
-          <Prose>{children}</Prose>
-        </article>
-        <PrevNextLinks />
-      </div>
-      <TableOfContents tableOfContents={tableOfContents} />
-    </>
+    <DocsLayoutClient title={title} tableOfContents={tableOfContents}>
+      {children}
+    </DocsLayoutClient>
   )
 }

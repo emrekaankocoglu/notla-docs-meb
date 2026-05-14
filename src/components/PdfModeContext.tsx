@@ -1,9 +1,33 @@
 'use client'
 
-import { createContext, useContext, useMemo, type ReactNode } from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+  type ReactNode,
+} from 'react'
 import { useSearchParams } from 'next/navigation'
 
-const PdfModeContext = createContext<boolean>(false)
+type PaginationState = {
+  current: number
+  total: number
+}
+
+type PdfModeValue = {
+  isPdfMode: boolean
+  pagination: PaginationState
+  setPagination: (next: Partial<PaginationState>) => void
+}
+
+const defaultValue: PdfModeValue = {
+  isPdfMode: false,
+  pagination: { current: 0, total: 0 },
+  setPagination: () => {},
+}
+
+const PdfModeContext = createContext<PdfModeValue>(defaultValue)
 
 export function PdfModeProvider({ children }: { children: ReactNode }) {
   const searchParams = useSearchParams()
@@ -14,13 +38,34 @@ export function PdfModeProvider({ children }: { children: ReactNode }) {
     [value],
   )
 
+  const [pagination, setPaginationState] = useState<PaginationState>({
+    current: 0,
+    total: 0,
+  })
+
+  const setPagination = useCallback((next: Partial<PaginationState>) => {
+    setPaginationState((prev) => ({ ...prev, ...next }))
+  }, [])
+
+  const ctx = useMemo<PdfModeValue>(
+    () => ({ isPdfMode, pagination, setPagination }),
+    [isPdfMode, pagination, setPagination],
+  )
+
   return (
-    <PdfModeContext.Provider value={isPdfMode}>
-      {children}
-    </PdfModeContext.Provider>
+    <PdfModeContext.Provider value={ctx}>{children}</PdfModeContext.Provider>
   )
 }
 
 export function usePdfMode() {
-  return useContext(PdfModeContext)
+  return useContext(PdfModeContext).isPdfMode
+}
+
+export function usePdfPagination() {
+  const { pagination, setPagination } = useContext(PdfModeContext)
+  return {
+    current: pagination.current,
+    total: pagination.total,
+    setPagination,
+  }
 }

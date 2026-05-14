@@ -47,6 +47,18 @@
   }
 }
 
+/* PDF mode: snap each generated <section> to a viewport boundary so
+   screenshots fall on natural page breaks. Activated via the `pdf-mode`
+   class added to <html> by Layout.tsx when ?pdf=1 is set. */
+html.pdf-mode {
+  scroll-snap-type: y mandatory;
+  scroll-padding-top: 2.75rem;
+}
+
+html.pdf-mode body {
+  scroll-snap-type: inherit;
+}
+
 @media print {
   @page {
     size: A4;

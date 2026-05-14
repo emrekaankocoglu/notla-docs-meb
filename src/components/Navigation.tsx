@@ -1,7 +1,10 @@
+'use client'
+
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
 
+import { usePdfMode } from '@/components/PdfModeContext'
 import { navigation } from '@/lib/navigation'
 
 export function Navigation({
@@ -12,6 +15,9 @@ export function Navigation({
   onLinkClick?: React.MouseEventHandler<HTMLAnchorElement>
 }) {
   let pathname = usePathname()
+  let isPdfMode = usePdfMode()
+  let withPdfParam = (href: string) =>
+    isPdfMode ? `${href}${href.includes('?') ? '&' : '?'}pdf=1` : href
 
   return (
     <nav className={clsx('text-base lg:text-sm', className)}>
@@ -28,7 +34,7 @@ export function Navigation({
               {section.links.map((link) => (
                 <li key={link.href} className="relative">
                   <Link
-                    href={link.href}
+                    href={withPdfParam(link.href)}
                     onClick={onLinkClick}
                     className={clsx(
                       'block w-full pl-3.5 before:pointer-events-none before:absolute before:top-1/2 before:-left-1 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full',

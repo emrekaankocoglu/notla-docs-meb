@@ -11,7 +11,7 @@ import { MobileNavigation } from '@/components/MobileNavigation'
 import { Navigation } from '@/components/Navigation'
 import { Search } from '@/components/Search'
 import { ThemeSelector } from '@/components/ThemeSelector'
-import { usePdfMode } from '@/components/PdfModeContext'
+import { usePdfMode, usePdfPagination } from '@/components/PdfModeContext'
 import { navigation } from '@/lib/navigation'
 
 function GitHubIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
@@ -36,16 +36,17 @@ function PdfHeader() {
   let pages = buildPagesIndex()
   let currentIdx = pages.findIndex((page) => page.href === pathname)
   let current = currentIdx >= 0 ? pages[currentIdx] : null
+  let { current: screenIdx, total: screenTotal } = usePdfPagination()
 
   return (
-    <header className="sticky top-0 z-50 flex flex-none items-center justify-between gap-4 border-b border-slate-200 bg-white px-4 py-3 sm:px-6 lg:px-8 dark:border-slate-800 dark:bg-slate-900 print:hidden">
+    <header className="sticky top-0 z-50 flex h-11 flex-none items-center justify-between gap-4 border-b border-slate-200 bg-white px-4 sm:px-6 lg:px-8 dark:border-slate-800 dark:bg-slate-900 print:hidden">
       <Link
         href="/"
         aria-label="Home page"
         className="flex items-center gap-3"
       >
-        <Logomark className="h-8 w-auto lg:hidden" />
-        <Logo className="hidden h-8 w-auto lg:block" />
+        <Logomark className="h-7 w-auto lg:hidden" />
+        <Logo className="hidden h-7 w-auto lg:block" />
       </Link>
 
       <div className="flex min-w-0 items-baseline gap-2 truncate text-right">
@@ -60,9 +61,9 @@ function PdfHeader() {
         <span className="truncate text-sm font-semibold text-slate-900 dark:text-white">
           {current?.title ?? 'Documentation'}
         </span>
-        {currentIdx >= 0 && (
-          <span className="text-xs whitespace-nowrap text-slate-500 dark:text-slate-400">
-            · {currentIdx + 1} / {pages.length}
+        {screenTotal > 0 && (
+          <span className="text-xs whitespace-nowrap text-slate-500 tabular-nums dark:text-slate-400">
+            · screen {screenIdx + 1} / {screenTotal}
           </span>
         )}
       </div>
@@ -125,6 +126,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
   let isHomePage = pathname === '/'
   let isPdfMode = usePdfMode()
 
+  useEffect(() => {
+    let root = document.documentElement
+    if (isPdfMode) {
+      root.classList.add('pdf-mode')
+      return () => {
+        root.classList.remove('pdf-mode')
+      }
+    }
+  }, [isPdfMode])
+
   return (
     <div className="flex w-full flex-col">
       <Header />
@@ -141,7 +152,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <div className="absolute inset-y-0 right-0 w-[50vw] bg-slate-50 dark:hidden" />
           <div className="absolute top-16 right-0 bottom-0 hidden h-12 w-px bg-linear-to-t from-slate-800 dark:block" />
           <div className="absolute top-28 right-0 bottom-0 hidden w-px bg-slate-800 dark:block" />
-          <div className="sticky top-19 -ml-0.5 h-[calc(100vh-4.75rem)] w-56 overflow-x-hidden overflow-y-auto py-4 pr-8 pl-0.5">
+          <div className="sticky top-19 -ml-0.5 h-[calc(100vh-4.75rem)] w-56 overflow-x-hidden overflow-y-auto pr-8 pl-0.5">
             <Navigation />
           </div>
         </div>
