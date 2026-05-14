@@ -131,7 +131,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
       {isHomePage && !isPdfMode && <Hero />}
 
-      <div className="relative mx-auto flex w-full flex-auto justify-center sm:px-2 lg:px-8 xl:px-12">
+      <div className="relative mx-auto flex w-full flex-auto justify-center sm:px-2 lg:px-4 xl:px-6">
         <div
           className={clsx(
             'hidden lg:relative lg:block lg:flex-none',
