@@ -14,6 +14,7 @@ const tableOfContents: Array<DocSection> = [
   { id: 'soru-listesi', title: 'Soru listesi' },
   { id: 'soru-detay', title: 'Bir soruyu inceleme' },
   { id: 'inceleme-gerekli', title: '“İnceleme Gerekli” gönderimler' },
+  { id: 'soruyu-onayla', title: 'Soruyu onaylama' },
   { id: 'yayinla', title: 'Notları yayınlama' },
 ]
 
@@ -106,30 +107,97 @@ export default function DegerlendirmePage() {
       <ScreenSection
         id="inceleme-gerekli"
         title="“İnceleme Gerekli” gönderimler"
-        intro="Tüm soruların başlangıçta 'Notlandırılmamış' olduğu bir görünüm. Üstte 'Otomatik Notlandırma: Başlamadı' yazısı varken, alt çubukta 'Notlandırmayan gönderimler var.' uyarısı yer alır. Otomatik notlandırma çalıştırıldıkça bu rakamlar düşer."
-        image="/screenshots/grading-questions-list.png"
+        intro="Bir gönderimi açtığınızda iki bölmeli inceleme ekranı belirir: solda öğrencinin taranmış kağıdı, sağda o soru için AI'ın seçtiği kriter, gerekçesi ve güven yüzdesi. Yapay zekânın önerisini onaylayabilir, başka bir kriteri seçebilir veya manuel olarak puanı değiştirebilirsiniz."
+        image="/screenshots/grading-submission-review.png"
         imageWidth={3420}
         imageHeight={1850}
-        alt="Sorular listesi; Q1-Q6 satırları, her birinin yanında '2 Notlandırılmamış' rozeti, %0 Notlandı; sağ üstte 'Otomatik Notlandırma: Başlamadı' ve 'Tüm soruları değerlendir' bağlantısı; alt çubukta turuncu 'Notlandırmayan gönderimler var.' ve 'Notları Yayınla' düğmesi."
-        caption="Otomatik notlandırma henüz çalıştırılmamış görünüm"
+        alt="İnceleme ekranı; solda öğrencinin Q1 cevabının taranmış görüntüsü ve üstte zoom/çizim araçları; sağda 'Sorular' panelinde Q1 Homojen ve Heterojen Karışım Örnekleri (0/20 puan) açılmış, 'Gerekçe: İki doğru heterojen örnek açıkça mevcut, homojen kısmı belirsiz', %58 güven; altta 6 kriter listesi, 3. kriter (İki doğru heterojen karışım örneği verilmiş, +10 puan) seçilmiş ve 'Yapay zeka önerisi' rozetli; sağ altta 'İncelemeyi Bitir' düğmesi, alt çubukta 'Önceki', 'Sonraki', 'Sonraki (İncelenmemiş)' düğmeleri."
+        caption="Tek bir gönderimi inceleme ekranı"
       >
         <ul>
           <li>
-            Soru başına notlandırma sırasını <strong>öğrenci sırasına</strong>{' '}
-            göre takip etmek tercih edilir; bu sayede aynı kağıdın
-            farklı sorularını birbirinin ardına inceleyebilirsiniz.
+            Sağ paneldeki <strong>Gerekçe</strong> kutusu AI&apos;ın
+            seçimini neden yaptığını kısaca özetler. Yan taraftaki{' '}
+            <strong>Güven</strong> çubuğu (örnek: <code>%58</code>) bu
+            kararına ne kadar emin olduğunu gösterir; düşük güvenli
+            kararları daha dikkatli incelemek faydalıdır.
           </li>
           <li>
-            Bir kriteri elle değiştirdiğinizde sistem değişikliği
-            kaydeder ve gönderimi <strong>Hazır</strong> olarak
-            işaretler; sıradaki gönderime otomatik geçiş için sağ üstteki
-            ileri ok düğmesini kullanın.
+            <strong>Yapay zeka önerisi</strong> rozeti, AI&apos;ın seçtiği
+            kriteri işaretler. Onayladığınızda{' '}
+            <strong>İncelemeyi Bitir</strong> düğmesine basmanız yeterli;
+            farklı bir kriteri tıklayarak seçimi anında değiştirebilirsiniz.
           </li>
           <li>
-            Hatalı bir not vermiş AI&apos;ı yeniden çalıştırmak istiyorsanız{' '}
+            Soldaki kâğıt görselinin üst çubuğundaki araçlarla{' '}
+            <em>yakınlaştırma</em>, <em>kalem</em>, <em>metin</em> ve
+            <em> el</em> simgelerini kullanarak inceleme yapabilir;
+            okunmayan bir bölgeyi vurgulamak veya ek not düşmek için
+            çizim araçlarını kullanabilirsiniz.
+          </li>
+          <li>
+            Üstteki <strong>Not: 0.0 / 100.0</strong> sayacı kâğıdın o
+            anki toplam notunu yansıtır; kriter seçimi değiştikçe
+            otomatik güncellenir.
+          </li>
+          <li>
+            Sağ alttaki <strong>Sonraki (İncelenmemiş)</strong> düğmesi,
+            sıradaki &quot;İnceleme Gerekli&quot; gönderime atlar; bu,
+            yalnızca düşük güvenli vakaları sırayla işlemenin en hızlı
+            yoludur.
+          </li>
+          <li>
+            Hatalı not veren AI&apos;ı yeniden çalıştırmak istiyorsanız{' '}
             <a href="/docs/notlandirma-ayarlari">otomatik notlandırma
             ayarları</a> sayfasına dönüp talimatı güncelleyip yeniden
             başlatabilirsiniz.
+          </li>
+        </ul>
+      </ScreenSection>
+
+      <hr />
+
+      <ScreenSection
+        id="soruyu-onayla"
+        title="Soruyu onaylama"
+        intro="Bir sorudaki tüm 'İnceleme Gerekli' gönderimleri inceledikten sonra öğrenci tablosuna geri dönersiniz. Tüm satırlar 'Hazır' veya 'İncelendi' olduğunda alt çubukta yeşil 'Onay için hazır' rozeti ve 'Onayla' düğmesi belirir; bu düğmeye basmak o soruyu nihai olarak kapatır ve sonuçların yayınlanmaya hazır olmasını sağlar."
+        image="/screenshots/grading-question-ready.png"
+        imageWidth={3420}
+        imageHeight={1850}
+        alt="Q2 Çözeltilerin Donma Noktası soru detayı; öğrenci tablosunda 12 öğrenci, çoğunda 'Hazır', üç öğrencide (Zeynep Aydın, Emre Öztürk, Seda Polat) 'İncelendi' rozeti; sağ üstte yeşil 'Gruplar: Tamamlandı' yazısı; alt çubuk: %100 incelendi, 3/3 İncelendi ilerleme çubuğu, yeşil 'Onay için hazır' rozeti, yeşil 'Onayla' düğmesi; sağda 'Review This Question', 'İlk Notlandırılmamıştan Başla', 'Baştan Başla' düğmeleri."
+        caption="Tüm gönderimler incelendi — soru onaya hazır"
+      >
+        <ul>
+          <li>
+            <strong>Hazır</strong>: AI&apos;ın güven eşiğini geçmiş ve
+            elle değişiklik gerektirmeyen gönderim.{' '}
+            <strong>İncelendi</strong>: önce &quot;İnceleme Gerekli&quot;
+            iken sizin onayınız ile sonuca bağlanmış gönderim.
+          </li>
+          <li>
+            Sağ üstteki <strong>Gruplar: Tamamlandı</strong> rozeti, bu
+            sorudaki tüm kriter gruplarının tutarlı şekilde
+            kapatıldığını doğrular; rozet sarı ise hâlâ eksik kalmış
+            grup vardır.
+          </li>
+          <li>
+            <strong>Onay için hazır</strong> rozeti yalnızca tüm
+            gönderimler ele alındığında (ilerleme çubuğu %100) görünür.
+            Eksik bırakılan gönderim varsa <em>Onayla</em> düğmesi
+            pasif kalır.
+          </li>
+          <li>
+            <strong>Onayla</strong> düğmesi, o sorunun tüm gönderimlerini
+            nihai olarak kilitler ve <em>Sorulara Dön</em> sayfasında o
+            satırı yeşil onayla işaretler. Onaydan sonra notları
+            yayınlamadan önce hâlâ değişiklik yapabilirsiniz, ancak her
+            değişiklik soruyu yeniden onaylamayı gerektirir.
+          </li>
+          <li>
+            Sağdaki <strong>Baştan Başla</strong> düğmesi tüm
+            gönderimleri sırasıyla yeniden açar; <strong>Review This
+            Question</strong> ise inceleme akışını özet kontrol için
+            kullanılır.
           </li>
         </ul>
       </ScreenSection>

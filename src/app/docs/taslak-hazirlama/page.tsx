@@ -16,7 +16,6 @@ const tableOfContents: Array<DocSection> = [
   { id: 'analiz', title: 'AI ile soru analizi' },
   { id: 'soru-listesi', title: 'Sorular ve puan dağılımı' },
   { id: 'kriterler', title: 'Soru bazlı kriterler' },
-  { id: 'kriterler-q2', title: 'İkinci soru — sayısal değerlendirme' },
   { id: 'tamamlama', title: 'Adımı tamamlama' },
 ]
 
@@ -170,17 +169,26 @@ export default function TaslakHazirlamaPage() {
         id="kriterler"
         title="Soru bazlı kriterler"
         intro="Bir soruya tıkladığınızda, o soru için AI'ın hazırladığı değerlendirme kriterleri (rubric) listelenir. Her kriter ayrı bir puana sahiptir ve eklediğiniz/sildiğiniz kriterler otomatik notlandırma sırasında doğrudan kullanılır."
-        image="/screenshots/step2-q1-expanded.png"
+        image="/screenshots/step2-q2-expanded.png"
         imageWidth={3420}
         imageHeight={1850}
-        alt="Q1 Homojen ve Heterojen Karışımlar (20 puan) açılmış; 5 kriter: 'İki doğru homojen karışım örneği' (10), 'Bir doğru homojen karışım örneği' (5), 'İki doğru heterojen karışım örneği' (10), 'Bir doğru heterojen karışım örneği' (5), 'Boş veya alakasız cevap' (0); altta 'Grup Oluştur' ve 'Kriter Ekle' düğmeleri."
-        caption="Q1 için AI'ın önerdiği değerlendirme kriterleri"
+        alt="Q2 Çözeltilerin Donma Noktası açılmış; 4 kriter: 'I. çözeltinin en önce donacağını doğru bir şekilde belirtme' (10), 'Gerekçeyi doğru bir şekilde açıklama' (10), 'Sadece doğru cevap, gerekçe yok veya yanlış' (10), 'Boş veya alakasız cevap' (0); altta 'Grup Oluştur' ve 'Kriter Ekle' düğmeleri."
+        caption="Bir soru için AI'ın önerdiği kademeli kriterler"
       >
         <ul>
           <li>
             <strong>Kriter</strong>: Belirli bir cevap durumunu
-            (&quot;İki doğru örnek&quot;, &quot;Boş veya alakasız
-            cevap&quot; gibi) tanımlar ve ona ait puanı belirler.
+            (&quot;Gerekçeyi doğru açıklama&quot;, &quot;Boş veya
+            alakasız cevap&quot; gibi) tanımlar ve ona ait puanı
+            belirler.
+          </li>
+          <li>
+            Aynı soruda birden çok kriter aynı puana sahip olabilir;
+            bunlar bağımsız olarak değerlendirilir, biri seçilmezse
+            diğeri seçilebilir. Sayısal cevap gerektiren sorularda
+            tipik olarak <em>doğru cevap</em>, <em>doğru gerekçe</em>{' '}
+            ve <em>sadece cevap, gerekçe yok</em> gibi kademeli
+            kriterler üretilir.
           </li>
           <li>
             <strong>Grup Oluştur</strong> düğmesi seçilen kriterleri bir
@@ -190,37 +198,13 @@ export default function TaslakHazirlamaPage() {
           </li>
           <li>
             <strong>Kriter Ekle</strong> düğmesi yeni bir kriter satırı
-            açar; aynı işlem her sorunun altında tekrar edilebilir.
+            açar; bir kriteri silmek için satırın sağındaki üç nokta
+            menüsünü kullanın. Aynı işlem her sorunun altında tekrar
+            edilebilir.
           </li>
           <li>
             Soru başlığı, açıklaması ve toplam puanı üstte yer alır;
             puanı değiştirdiğinizde toplam puan otomatik güncellenir.
-          </li>
-        </ul>
-      </ScreenSection>
-
-      <hr />
-
-      <ScreenSection
-        id="kriterler-q2"
-        title="İkinci soru — sayısal değerlendirme"
-        intro="Farklı bir soru için AI'ın oluşturduğu kriterler. Sayısal cevap içeren sorularda 'gerekçeyi doğru şekilde açıklama' veya 'sadece doğru cevap, gerekçe yok' gibi kademeli kriterler tipik olarak otomatik üretilir."
-        image="/screenshots/step2-q2-expanded.png"
-        imageWidth={3420}
-        imageHeight={1850}
-        alt="Q2 Çözeltilerin Donma Noktası açılmış; 4 kriter: 'I. çözeltinin en önce donacağını doğru bir şekilde belirtme' (10), 'Gerekçeyi doğru bir şekilde açıklama' (10), 'Sadece doğru cevap, gerekçe yok veya yanlış' (10), 'Boş veya alakasız cevap' (0)."
-        caption="Q2 için kademeli kriterler"
-      >
-        <ul>
-          <li>
-            Aynı soruda birden çok kriter aynı puana sahip olabilir;
-            bunlar bağımsız olarak değerlendirilir, biri seçilmez ise
-            diğeri seçilebilir.
-          </li>
-          <li>
-            Bir kriteri silmek için satırın sağındaki üç nokta menüsünü
-            kullanın; bu işlem geri alınabilir bir taslak değişikliğidir
-            ve kaydetmediğiniz sürece sistemde kalıcı olmaz.
           </li>
           <li>
             Kriterler kısa ve anlaşılır tutulduğunda otomatik notlandırma
