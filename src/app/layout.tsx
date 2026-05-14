@@ -23,11 +23,11 @@ const lexend = localFont({
 
 export const metadata: Metadata = {
   title: {
-    template: '%s · Notla Docs',
-    default: 'Notla Docs — Course management for educators',
+    template: '%s · Notla Kullanım Kılavuzu',
+    default: 'Notla Kullanım Kılavuzu',
   },
   description:
-    'Documentation for Notla, the course management platform for coordinators and educators. Learn how to set up courses, manage users, and get the most out of every workflow.',
+    'Notla için kullanım kılavuzu. Ders ve kullanıcı yönetiminden ödev oluşturmaya, AI ile otomatik notlandırmadan sonuçları raporlamaya kadar tüm iş akışlarını adım adım öğrenin.',
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon.ico',
@@ -42,7 +42,7 @@ export default function RootLayout({
 }) {
   return (
     <html
-      lang="en"
+      lang="tr"
       className={clsx('h-full antialiased', inter.variable, lexend.variable)}
       suppressHydrationWarning
     >

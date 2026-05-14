@@ -63,7 +63,7 @@ function PdfHeader() {
         </span>
         {screenTotal > 0 && (
           <span className="text-xs whitespace-nowrap text-slate-500 tabular-nums dark:text-slate-400">
-            · screen {screenIdx + 1} / {screenTotal}
+            · sayfa {screenIdx + 1} / {screenTotal}
           </span>
         )}
       </div>

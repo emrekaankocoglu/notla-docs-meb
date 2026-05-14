@@ -6,7 +6,8 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "build:pdfs": "node scripts/build-pdfs.mjs"
   },
   "browserslist": "defaults, not ie <= 11",
   "dependencies": {
@@ -38,6 +39,8 @@
     "@types/react-dom": "19.2.3",
     "eslint": "^9.39.4",
     "eslint-config-next": "16.2.6",
+    "pdf-lib": "^1.17.1",
+    "playwright": "^1.60.0",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "sharp": "0.34.3"

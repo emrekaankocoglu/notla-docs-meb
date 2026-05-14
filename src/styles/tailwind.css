@@ -60,7 +60,8 @@ html.pdf-mode body {
 }
 
 /* Cap figure images so a single screenshot can't dominate a screen and
-   force a section break. Authors don't need to worry about image size. */
+   force a section break. The files stay high-res; this only limits their
+   rendered size so heading, intro, caption, and bullets fit on one screen. */
 html.pdf-mode figure {
   margin-block: 1.25rem;
   text-align: center;

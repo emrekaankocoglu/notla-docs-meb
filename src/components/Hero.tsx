@@ -1,26 +1,9 @@
-import { Fragment } from 'react'
 import Image from 'next/image'
-import clsx from 'clsx'
-import { Highlight } from 'prism-react-renderer'
 
 import { Button } from '@/components/Button'
 import { HeroBackground } from '@/components/HeroBackground'
 import blurCyanImage from '@/images/blur-cyan.png'
 import blurIndigoImage from '@/images/blur-indigo.png'
-
-const codeLanguage = 'javascript'
-const code = `export default {
-  strategy: 'predictive',
-  engine: {
-    cpus: 12,
-    backups: ['./storage/cache.wtf'],
-  },
-}`
-
-const tabs = [
-  { name: 'cache-advance.config.js', isActive: true },
-  { name: 'package.json', isActive: false },
-]
 
 function TrafficLightsIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
@@ -49,16 +32,17 @@ export function Hero() {
             />
             <div className="relative">
               <p className="inline bg-linear-to-r from-indigo-200 via-sky-400 to-indigo-200 bg-clip-text font-display text-5xl tracking-tight text-transparent">
-                Never miss the cache again.
+                Notla Kullanım Kılavuzu
               </p>
               <p className="mt-3 text-2xl tracking-tight text-slate-400">
-                Cache every single thing your app could ever do ahead of time,
-                so your code never even has to run at all.
+                Ders ve kullanıcı yönetiminden ödev oluşturmaya, AI ile
+                otomatik notlandırmadan sonuç raporlarına kadar Notla&apos;nın
+                tüm iş akışları için adım adım rehber.
               </p>
               <div className="mt-8 flex gap-4 md:justify-center lg:justify-start">
-                <Button href="/">Get started</Button>
-                <Button href="/" variant="secondary">
-                  View on GitHub
+                <Button href="/docs/baslarken">Başla</Button>
+                <Button href="/docs/odev-olusturma" variant="secondary">
+                  Ödev oluşturmayı öğren
                 </Button>
               </div>
             </div>
@@ -88,82 +72,25 @@ export function Hero() {
               />
               <div className="absolute inset-0 rounded-2xl bg-linear-to-tr from-sky-300 via-sky-300/70 to-blue-300 opacity-10 blur-lg" />
               <div className="absolute inset-0 rounded-2xl bg-linear-to-tr from-sky-300 via-sky-300/70 to-blue-300 opacity-10" />
-              <div className="relative rounded-2xl bg-[#0A101F]/80 ring-1 ring-white/10 backdrop-blur-sm">
+              <div className="relative overflow-hidden rounded-2xl bg-[#0A101F]/80 ring-1 ring-white/10 backdrop-blur-sm">
                 <div className="absolute -top-px right-11 left-20 h-px bg-linear-to-r from-sky-300/0 via-sky-300/70 to-sky-300/0" />
                 <div className="absolute right-20 -bottom-px left-11 h-px bg-linear-to-r from-blue-400/0 via-blue-400 to-blue-400/0" />
-                <div className="pt-4 pl-4">
+                <div className="px-4 pt-4">
                   <TrafficLightsIcon className="h-2.5 w-auto stroke-slate-500/30" />
-                  <div className="mt-4 flex space-x-2 text-xs">
-                    {tabs.map((tab) => (
-                      <div
-                        key={tab.name}
-                        className={clsx(
-                          'flex h-6 rounded-full',
-                          tab.isActive
-                            ? 'bg-linear-to-r from-sky-400/30 via-sky-400 to-sky-400/30 p-px font-medium text-sky-300'
-                            : 'text-slate-500',
-                        )}
-                      >
-                        <div
-                          className={clsx(
-                            'flex items-center rounded-full px-2.5',
-                            tab.isActive && 'bg-slate-800',
-                          )}
-                        >
-                          {tab.name}
-                        </div>
-                      </div>
-                    ))}
+                  <div className="mt-3 flex h-6 items-center gap-2 rounded-full bg-slate-800/60 px-3 text-xs text-slate-400">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                    app.notla.net/courses
                   </div>
-                  <div className="mt-6 flex items-start px-1 text-sm">
-                    <div
-                      aria-hidden="true"
-                      className="border-r border-slate-300/5 pr-4 font-mono text-slate-600 select-none"
-                    >
-                      {Array.from({
-                        length: code.split('\n').length,
-                      }).map((_, index) => (
-                        <Fragment key={index}>
-                          {(index + 1).toString().padStart(2, '0')}
-                          <br />
-                        </Fragment>
-                      ))}
-                    </div>
-                    <Highlight
-                      code={code}
-                      language={codeLanguage}
-                      theme={{ plain: {}, styles: [] }}
-                    >
-                      {({
-                        className,
-                        style,
-                        tokens,
-                        getLineProps,
-                        getTokenProps,
-                      }) => (
-                        <pre
-                          className={clsx(
-                            className,
-                            'flex overflow-x-auto pb-6',
-                          )}
-                          style={style}
-                        >
-                          <code className="px-4">
-                            {tokens.map((line, lineIndex) => (
-                              <div key={lineIndex} {...getLineProps({ line })}>
-                                {line.map((token, tokenIndex) => (
-                                  <span
-                                    key={tokenIndex}
-                                    {...getTokenProps({ token })}
-                                  />
-                                ))}
-                              </div>
-                            ))}
-                          </code>
-                        </pre>
-                      )}
-                    </Highlight>
-                  </div>
+                </div>
+                <div className="mt-3 overflow-hidden">
+                  <Image
+                    src="/screenshots/dashboard-courses.png"
+                    alt="Notla Dersler ekranı"
+                    width={1024}
+                    height={553}
+                    className="block w-full"
+                    priority
+                  />
                 </div>
               </div>
             </div>

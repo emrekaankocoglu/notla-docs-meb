@@ -1,61 +1,40 @@
 export const navigation = [
   {
-    title: 'Introduction',
+    title: 'Başlarken',
     links: [
-      { title: 'Getting started', href: '/' },
-      { title: 'Installation', href: '/docs/installation' },
-      { title: 'Page-building example', href: '/docs/example-screens' },
-      {
-        title: 'Page-building example (Markdoc)',
-        href: '/docs/example-screens-markdoc',
-      },
+      { title: 'Hoş geldiniz', href: '/' },
+      { title: 'Notla nedir ve arayüz', href: '/docs/baslarken' },
     ],
   },
   {
-    title: 'Core concepts',
+    title: 'Kullanıcı ve Ders Yönetimi',
     links: [
-      { title: 'Understanding caching', href: '/docs/understanding-caching' },
-      {
-        title: 'Predicting user behavior',
-        href: '/docs/predicting-user-behavior',
-      },
-      { title: 'Basics of time-travel', href: '/docs/basics-of-time-travel' },
-      {
-        title: 'Introduction to string theory',
-        href: '/docs/introduction-to-string-theory',
-      },
-      { title: 'The butterfly effect', href: '/docs/the-butterfly-effect' },
+      { title: 'Kullanıcıları yönetme', href: '/docs/kullanicilar' },
+      { title: 'Ders oluşturma', href: '/docs/ders-olusturma' },
+      { title: 'Ders yönetimi', href: '/docs/ders-yonetimi' },
     ],
   },
   {
-    title: 'Advanced guides',
+    title: 'Ödev ve Sınav Hazırlama',
     links: [
-      { title: 'Writing plugins', href: '/docs/writing-plugins' },
-      { title: 'Neuralink integration', href: '/docs/neuralink-integration' },
-      { title: 'Temporal paradoxes', href: '/docs/temporal-paradoxes' },
-      { title: 'Testing', href: '/docs/testing' },
-      { title: 'Compile-time caching', href: '/docs/compile-time-caching' },
-      {
-        title: 'Predictive data generation',
-        href: '/docs/predictive-data-generation',
-      },
+      { title: 'Ödev/sınav oluşturma', href: '/docs/odev-olusturma' },
+      { title: 'Taslak ve soruları ekleme', href: '/docs/taslak-hazirlama' },
+      { title: 'Sayfa bölgelerini işaretleme', href: '/docs/sayfa-bolgeleri' },
     ],
   },
   {
-    title: 'API reference',
+    title: 'Notlandırma ve Sonuçlar',
     links: [
-      { title: 'CacheAdvance.predict()', href: '/docs/cacheadvance-predict' },
-      { title: 'CacheAdvance.flush()', href: '/docs/cacheadvance-flush' },
-      { title: 'CacheAdvance.revert()', href: '/docs/cacheadvance-revert' },
-      { title: 'CacheAdvance.regret()', href: '/docs/cacheadvance-regret' },
+      { title: 'Öğrenci kağıtlarını yükleme', href: '/docs/kagit-yukleme' },
+      { title: 'Otomatik notlandırma ayarları', href: '/docs/notlandirma-ayarlari' },
+      { title: 'Kağıtları değerlendirme', href: '/docs/degerlendirme' },
+      { title: 'Sonuçları görüntüleme', href: '/docs/sonuclar' },
     ],
   },
   {
-    title: 'Contributing',
+    title: 'Mobil',
     links: [
-      { title: 'How to contribute', href: '/docs/how-to-contribute' },
-      { title: 'Architecture guide', href: '/docs/architecture-guide' },
-      { title: 'Design principles', href: '/docs/design-principles' },
+      { title: 'Notla Tarayıcı', href: '/docs/notla-tarayici' },
     ],
   },
 ]

@@ -34,3 +34,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# generated PDF docs and intermediate screenshots
+/public/pdfs/
+/public/screenshots/pdf/

@@ -4,6 +4,8 @@ import Image, { type StaticImageData } from 'next/image'
 import { type ReactNode } from 'react'
 import clsx from 'clsx'
 
+const screenshotSizes = '(min-width: 1024px) 1100px, 100vw'
+
 export type ScreenSectionProps = {
   /** Anchor id used on the heading and (optionally) by the page TOC. */
   id: string
@@ -56,13 +58,15 @@ export function ScreenSection({
             alt={alt}
             width={imageWidth ?? 1600}
             height={imageHeight ?? 1000}
-            sizes="(min-width: 1024px) 720px, 100vw"
+            unoptimized
+            sizes={screenshotSizes}
           />
         ) : (
           <Image
             src={image}
             alt={alt}
-            sizes="(min-width: 1024px) 720px, 100vw"
+            unoptimized
+            sizes={screenshotSizes}
           />
         )}
         {caption && <figcaption>{caption}</figcaption>}
