@@ -93,6 +93,15 @@ export function PdfPaginator({ title, children }: PdfPaginatorProps) {
       blocks.forEach((el, i) => {
         const h = blockHeight(el)
         const isHeading = HEADING_TAGS.has(el.tagName)
+        const isBreak = el.tagName === 'HR'
+
+        // Treat thematic breaks (`---`) as soft page breaks. They start a
+        // fresh screen and aren't rendered themselves, so authors can use
+        // them to mark intended screen boundaries in markdown.
+        if (isBreak) {
+          flush()
+          return
+        }
 
         // Avoid orphaned headings: if we're past the threshold of cap
         // and a heading appears, send it to the next screen.
@@ -130,9 +139,27 @@ export function PdfPaginator({ title, children }: PdfPaginatorProps) {
       document.fonts.ready.then(paginate).catch(() => {})
     }
 
+    // Re-paginate when images finish loading. Their natural height is 0
+    // before load, which would otherwise produce too many tiny screens.
+    const root = measureRef.current
+    const imgs = root
+      ? Array.from(root.querySelectorAll<HTMLImageElement>('img'))
+      : []
+    const onImgLoad = () => paginate()
+    imgs.forEach((img) => {
+      if (!img.complete) {
+        img.addEventListener('load', onImgLoad, { once: true })
+        img.addEventListener('error', onImgLoad, { once: true })
+      }
+    })
+
     return () => {
       cancelled = true
       window.removeEventListener('resize', onResize)
+      imgs.forEach((img) => {
+        img.removeEventListener('load', onImgLoad)
+        img.removeEventListener('error', onImgLoad)
+      })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [childArray.length])

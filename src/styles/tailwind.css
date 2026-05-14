@@ -59,6 +59,37 @@ html.pdf-mode body {
   scroll-snap-type: inherit;
 }
 
+/* Cap figure images so a single screenshot can't dominate a screen and
+   force a section break. Authors don't need to worry about image size. */
+html.pdf-mode figure {
+  margin-block: 1.25rem;
+  text-align: center;
+}
+
+html.pdf-mode figure img {
+  display: inline-block;
+  max-height: 48vh;
+  width: auto;
+  max-width: 100%;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgb(15 23 42 / 0.08);
+}
+
+html.pdf-mode figure figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+}
+
+/* When a screen starts with a `<ScreenSection>`-style wrapper, anchor its
+   heading to the top of the screen. Prose's own first-child reset only
+   reaches direct children, so the wrapped heading would otherwise pick
+   up the default h2/h3 margin-top and leave a big gap under the header. */
+html.pdf-mode .prose > section:first-child > :first-child,
+html.pdf-mode .prose > section > h2:first-child,
+html.pdf-mode .prose > section > h3:first-child {
+  margin-top: 0;
+}
+
 @media print {
   @page {
     size: A4;

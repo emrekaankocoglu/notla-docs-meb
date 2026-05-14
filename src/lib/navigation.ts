@@ -4,6 +4,11 @@ export const navigation = [
     links: [
       { title: 'Getting started', href: '/' },
       { title: 'Installation', href: '/docs/installation' },
+      { title: 'Page-building example', href: '/docs/example-screens' },
+      {
+        title: 'Page-building example (Markdoc)',
+        href: '/docs/example-screens-markdoc',
+      },
     ],
   },
   {
