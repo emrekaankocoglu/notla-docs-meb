@@ -58,10 +58,6 @@ export const navigation = [
         title: '6. Sonuçları gör',
         href: '/docs/example-use-grading-flow/sonuclar',
       },
-      {
-        title: 'Appendix — Notla Tarayıcı',
-        href: '/docs/example-use-grading-flow/notla-tarayici',
-      },
     ],
   },
   {

@@ -44,7 +44,9 @@ export default function KagitYuklemePage() {
           <li>
             Mobil tarama gerekiyorsa sol alttaki{' '}
             <strong>Notla Tarayıcı</strong> seçeneğini kullanabilirsiniz;
-            detaylar appendix bölümünde kalır.
+            detaylar için{' '}
+            <a href="/docs/notla-tarayici">Notla Tarayıcı</a> bölümüne
+            bakın.
           </li>
           <li>
             Taramalar işlenip öğrencilerle eşleştikten sonra otomatik

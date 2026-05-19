@@ -75,16 +75,15 @@ export function Hero() {
               <div className="relative overflow-hidden rounded-2xl bg-[#0A101F]/80 ring-1 ring-white/10 backdrop-blur-sm">
                 <div className="absolute -top-px right-11 left-20 h-px bg-linear-to-r from-sky-300/0 via-sky-300/70 to-sky-300/0" />
                 <div className="absolute right-20 -bottom-px left-11 h-px bg-linear-to-r from-blue-400/0 via-blue-400 to-blue-400/0" />
-                <div className="px-4 pt-4">
-                  <TrafficLightsIcon className="h-2.5 w-auto stroke-slate-500/30" />
-                  <div className="mt-3 flex h-6 items-center gap-2 rounded-full bg-slate-800/60 px-3 text-xs text-slate-400">
+                <div className="px-4 pt-2">
+                  <div className="mt-1 flex h-6 items-center gap-2 rounded-full bg-slate-800/60 px-3 text-xs text-slate-400">
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                    app.notla.net/courses
+                    Notla
                   </div>
                 </div>
                 <div className="mt-3 overflow-hidden">
                   <Image
-                    src="/screenshots/dashboard-courses.png"
+                    src="/screenshots/grading-question-ready.png"
                     alt="Notla Dersler ekranı"
                     width={1024}
                     height={553}

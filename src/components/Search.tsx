@@ -75,7 +75,7 @@ function useAutocomplete({
       React.KeyboardEvent
     >({
       id,
-      placeholder: 'Find something...',
+      placeholder: 'Dökümanlarda ara...',
       defaultActiveItemId: 0,
       onStateChange({ state }) {
         setAutocompleteState(state)
@@ -451,7 +451,7 @@ export function Search() {
       >
         <SearchIcon className="h-5 w-5 flex-none fill-slate-400 group-hover:fill-slate-500 md:group-hover:fill-slate-400 dark:fill-slate-500" />
         <span className="sr-only md:not-sr-only md:ml-2 md:text-slate-500 md:dark:text-slate-400">
-          Search docs
+          Ara
         </span>
         {modifierKey && (
           <kbd className="ml-auto hidden font-medium text-slate-400 md:block dark:text-slate-500">
