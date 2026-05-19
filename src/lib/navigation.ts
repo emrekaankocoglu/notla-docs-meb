@@ -32,6 +32,39 @@ export const navigation = [
     ],
   },
   {
+    title: 'Örnek Kullanım: Notlandırma Akışı',
+    links: [
+      {
+        title: '1. Ödev oluştur',
+        href: '/docs/example-use-grading-flow/odev-olusturma',
+      },
+      {
+        title: '2. Taslak yükle ve AI ile analiz et',
+        href: '/docs/example-use-grading-flow/taslak-hazirlama',
+      },
+      {
+        title: '3. Taramaları yükle',
+        href: '/docs/example-use-grading-flow/kagit-yukleme',
+      },
+      {
+        title: '4. Otomatik değerlendirmeyi başlat',
+        href: '/docs/example-use-grading-flow/notlandirma-ayarlari',
+      },
+      {
+        title: '5. İncele ve onayla',
+        href: '/docs/example-use-grading-flow/degerlendirme',
+      },
+      {
+        title: '6. Sonuçları gör',
+        href: '/docs/example-use-grading-flow/sonuclar',
+      },
+      {
+        title: 'Appendix — Notla Tarayıcı',
+        href: '/docs/example-use-grading-flow/notla-tarayici',
+      },
+    ],
+  },
+  {
     title: 'Mobil',
     links: [
       { title: 'Notla Tarayıcı', href: '/docs/notla-tarayici' },

@@ -13,6 +13,7 @@ import { Search } from '@/components/Search'
 import { ThemeSelector } from '@/components/ThemeSelector'
 import { usePdfMode, usePdfPagination } from '@/components/PdfModeContext'
 import { navigation } from '@/lib/navigation'
+import { FIT_PDF_PAGES_TO_SCREEN } from '@/lib/pdf'
 
 function GitHubIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
@@ -125,16 +126,22 @@ export function Layout({ children }: { children: React.ReactNode }) {
   let pathname = usePathname()
   let isHomePage = pathname === '/'
   let isPdfMode = usePdfMode()
+  let shouldFitPdfPagesToScreen = isPdfMode && FIT_PDF_PAGES_TO_SCREEN
 
   useEffect(() => {
     let root = document.documentElement
     if (isPdfMode) {
       root.classList.add('pdf-mode')
-      return () => {
-        root.classList.remove('pdf-mode')
-      }
     }
-  }, [isPdfMode])
+    if (shouldFitPdfPagesToScreen) {
+      root.classList.add('pdf-fit-screen')
+    }
+
+    return () => {
+      root.classList.remove('pdf-mode')
+      root.classList.remove('pdf-fit-screen')
+    }
+  }, [isPdfMode, shouldFitPdfPagesToScreen])
 
   return (
     <div className="flex w-full flex-col">
@@ -152,7 +159,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <div className="absolute inset-y-0 right-0 w-[50vw] bg-slate-50 dark:hidden" />
           <div className="absolute top-16 right-0 bottom-0 hidden h-12 w-px bg-linear-to-t from-slate-800 dark:block" />
           <div className="absolute top-28 right-0 bottom-0 hidden w-px bg-slate-800 dark:block" />
-          <div className="sticky top-19 -ml-0.5 h-[calc(100vh-4.75rem)] w-56 overflow-x-hidden overflow-y-auto pr-8 pl-0.5">
+          <div
+            className={clsx(
+              'sticky top-19 -ml-0.5 h-[calc(100vh-4.75rem)] w-56 overflow-x-hidden overflow-y-auto pr-8 pl-0.5',
+              !isPdfMode && 'py-8',
+            )}
+          >
             <Navigation />
           </div>
         </div>

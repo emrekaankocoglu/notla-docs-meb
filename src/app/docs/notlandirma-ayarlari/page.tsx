@@ -45,11 +45,6 @@ export default function NotlandirmaAyarlariPage() {
           Açılan sayfa iki bölüme ayrılır: AI yapılandırma alanı ve
           otomatik notlandırılacak soruların seçim listesi.
         </p>
-        <Callout title="Soru başına ayar">
-          Talimatlar, güven eşiği ve önizleme limiti her soru için
-          ayrı ayrı tanımlanır. Listeden bir soruyu seçtiğinizde
-          ayarlar o sorunun değerlerine geçer.
-        </Callout>
       </section>
 
       <hr />

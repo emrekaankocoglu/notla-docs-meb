@@ -8,6 +8,7 @@ import { usePdfMode } from '@/components/PdfModeContext'
 import { PrevNextLinks } from '@/components/PrevNextLinks'
 import { Prose } from '@/components/Prose'
 import { TableOfContents } from '@/components/TableOfContents'
+import { FIT_PDF_PAGES_TO_SCREEN } from '@/lib/pdf'
 import { type Section } from '@/lib/sections'
 
 // Author-friendly Section/Subsection shapes. These are structurally
@@ -60,7 +61,14 @@ export function DocPage({
     return (
       <div className="min-w-0 flex-auto px-4 lg:pr-0 lg:pl-8 xl:px-16">
         <article>
-          <PdfPaginator title={title}>{children}</PdfPaginator>
+          {FIT_PDF_PAGES_TO_SCREEN ? (
+            <PdfPaginator title={title}>{children}</PdfPaginator>
+          ) : (
+            <div className="py-8">
+              <DocsHeader title={title} />
+              <Prose>{children}</Prose>
+            </div>
+          )}
         </article>
       </div>
     )

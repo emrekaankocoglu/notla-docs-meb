@@ -26,12 +26,6 @@ Notla'yı yeni kullanmaya başlayan **koordinatörler** ve **öğretmenler** iç
 - **Öğretmenseniz** size atanmış bir derse girip doğrudan [Ödev/sınav oluşturma](/docs/odev-olusturma) bölümünden devam edebilirsiniz.
 - **Mobil tarayıcı** uygulaması için ayrı bir bölüm bulunur: [Notla Tarayıcı](/docs/notla-tarayici).
 
-{% callout title="İpucu" %}
-Her sayfa, ekran ekran ilerleyen gerçek görüntülerle birlikte olası uyarı kutuları ve ipuçları içerir. PDF görünümüne geçmek için herhangi bir sayfaya `?pdf=1` ekleyebilirsiniz; her ekran tek bir sayfaya sığacak şekilde otomatik bölünür.
-{% /callout %}
-
----
-
 ## Tipik bir akış
 
 Yeni bir dersi sıfırdan yayına alana kadar süreç genellikle şu sırayla işler:

@@ -2,11 +2,10 @@
 /**
  * build-pdfs.mjs
  *
- * Drives the local dev server in PDF mode (?pdf=1), captures one PNG per
- * screen-snapped <section> emitted by the PdfPaginator, and assembles a
- * PDF per docs page where each PDF page is sized to exactly match the
- * captured image — so the screenshot fills the page edge-to-edge with no
- * borders or padding.
+ * Drives the local dev server in PDF mode (?pdf=1). When fit-to-screen
+ * pagination is enabled, captures one PNG per screen-snapped <section>
+ * emitted by the PdfPaginator and assembles a PDF. When disabled, exports
+ * the continuous browser print layout instead.
  *
  * Usage:
  *   node scripts/build-pdfs.mjs                # all pages in navigation.ts
@@ -69,15 +68,22 @@ async function ensureDir(dir) {
   await fs.mkdir(dir, { recursive: true })
 }
 
-/** Wait until the PdfPaginator has produced a stable set of sections. */
-async function waitForPagination(page) {
+/** Wait until PDF mode is ready, then report which layout mode is active. */
+async function waitForPdfLayout(page) {
   await page.waitForFunction(
     () => {
-      return (
-        document.querySelectorAll('[data-screen-index]').length > 0 &&
-        document.documentElement.classList.contains('pdf-mode')
-      )
+      return document.documentElement.classList.contains('pdf-mode')
     },
+    { timeout: 60_000 },
+  )
+
+  const isFitScreen = await page.evaluate(() =>
+    document.documentElement.classList.contains('pdf-fit-screen'),
+  )
+  if (!isFitScreen) return 'continuous'
+
+  await page.waitForFunction(
+    () => document.querySelectorAll('[data-screen-index]').length > 0,
     { timeout: 60_000 },
   )
 
@@ -109,6 +115,8 @@ async function waitForPagination(page) {
     },
     { timeout: 60_000, polling: 250 },
   )
+
+  return 'fit-screen'
 }
 
 async function waitForFonts(page) {
@@ -157,6 +165,46 @@ async function waitForScreenImages(page, index) {
   }, index)
 }
 
+async function waitForPageImages(page) {
+  await page.evaluate(async () => {
+    const images = Array.from(document.querySelectorAll('img'))
+    await Promise.all(
+      images.map(async (img) => {
+        img.loading = 'eager'
+        if (!img.complete || img.naturalWidth === 0) {
+          await new Promise((resolve) => {
+            img.addEventListener('load', resolve, { once: true })
+            img.addEventListener('error', resolve, { once: true })
+          })
+        }
+        if (typeof img.decode === 'function') {
+          await img.decode().catch(() => {})
+        }
+      }),
+    )
+  })
+}
+
+async function captureContinuousPdf({ page, slug }) {
+  await ensureDir(OUT_DIR)
+  await waitForPageImages(page)
+
+  const bytes = await page.pdf({
+    format: 'A4',
+    printBackground: true,
+    preferCSSPageSize: true,
+  })
+  const outFile = path.join(OUT_DIR, `${slug}.pdf`)
+  await fs.writeFile(outFile, bytes)
+
+  const pdf = await PDFDocument.load(bytes)
+  const pages = pdf.getPageCount()
+  console.log(`  ${pages} page(s), continuous layout`)
+  console.log(`  → ${path.relative(ROOT, outFile)}`)
+
+  return { ok: true, screens: pages, bytes }
+}
+
 async function capturePage({ context, href, slug }) {
   const page = await context.newPage()
   const url = new URL(href, BASE_URL)
@@ -175,10 +223,11 @@ async function capturePage({ context, href, slug }) {
 
   await waitForFonts(page)
 
+  let layoutMode = null
   let paginationError = null
   for (let attempt = 1; attempt <= 2; attempt++) {
     try {
-      await waitForPagination(page)
+      layoutMode = await waitForPdfLayout(page)
       paginationError = null
       break
     } catch (err) {
@@ -196,6 +245,12 @@ async function capturePage({ context, href, slug }) {
     )
     await page.close()
     return { ok: false, reason: 'no_paginator' }
+  }
+
+  if (layoutMode === 'continuous') {
+    const result = await captureContinuousPdf({ page, slug })
+    await page.close()
+    return result
   }
 
   const total = await page.locator('[data-screen-index]').count()
