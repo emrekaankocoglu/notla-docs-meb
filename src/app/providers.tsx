@@ -7,7 +7,12 @@ import { PdfModeProvider } from '@/components/PdfModeContext'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider attribute="class" disableTransitionOnChange>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="dark"
+      enableSystem={false}
+      disableTransitionOnChange
+    >
       <Suspense fallback={children}>
         <PdfModeProvider>{children}</PdfModeProvider>
       </Suspense>
